@@ -1,9 +1,13 @@
 import json
+import os
+
 from googleapiclient.discovery import build
 
 
 class Channel:
     """Класс для ютуб-канала"""
+
+    api_key = os.getenv('YT_API_KEY')
 
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализирует id канала. Дальше все данные будут подтягиваться по API."""
@@ -21,30 +25,44 @@ class Channel:
         return f'{self.title} ({self.url})'
 
     def __add__(self, other):
-        return self.subscriber_count + other.subscriber_count
+        if isinstance(other, self.__class__):
+            return self.subscriber_count + other.subscriber_count
+        raise Exception
 
     def __sub__(self, other):
-        return self.subscriber_count - other.subscriber_count
+        if isinstance(other, self.__class__):
+            return self.subscriber_count - other.subscriber_count
+        raise Exception
 
     def __gt__(self, other):
-        return self.subscriber_count > other.subscriber_count
+        if isinstance(other, self.__class__):
+            return self.subscriber_count > other.subscriber_count
+        raise Exception
 
     def __ge__(self, other):
-        return self.subscriber_count >= other.subscriber_count
+        if isinstance(other, self.__class__):
+            return self.subscriber_count >= other.subscriber_count
+        raise Exception
 
     def __lt__(self, other):
-        return self.subscriber_count < other.subscriber_count
+        if isinstance(other, self.__class__):
+            return self.subscriber_count < other.subscriber_count
+        raise Exception
 
     def __le__(self, other):
-        return self.subscriber_count <= other.subscriber_count
+        if isinstance(other, self.__class__):
+            return self.subscriber_count <= other.subscriber_count
+        raise Exception
 
     def __eq__(self, other):
-        return self.subscriber_count == other.subscriber_count
+        if isinstance(other, self.__class__):
+            return self.subscriber_count == other.subscriber_count
+        raise Exception
 
     @classmethod
     def get_service(cls):
         """Возвращает объект для работы с YouTube API."""
-        return build('youtube', 'v3', developerKey='AIzaSyCMfJdJiQ2ONFN-FX0w0VLu6gpuLyHcFj4')
+        return build('youtube', 'v3', developerKey=cls.api_key)
 
     def print_info(self):
         """Выводит в консоль информацию о канале."""
@@ -63,6 +81,7 @@ class Channel:
         }
         file = open(filename, "w")
         json.dump(result, file)
+        file.close()
 
     @property
     def channel_id(self):
