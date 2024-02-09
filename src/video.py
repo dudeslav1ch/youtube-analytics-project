@@ -15,7 +15,7 @@ class Video:
         self.make_attribute_video()
 
     def __str__(self):
-        return f'{self.title_video}'
+        return f'{self.title}'
 
     @classmethod
     def get_service(cls):
@@ -24,12 +24,19 @@ class Video:
 
     def make_attribute_video(self):
         """Creates and populates class attributes from the information received."""
-        self.video = self.get_service().videos().list(part='snippet,statistics,contentDetails,topicDetails',
-                                                      id=self.id_video).execute()
-        self.title_video = self.video["items"][0]["snippet"]["title"]
-        self.url_video = f"https://youtu.be/{self.__id_video}"
-        self.view_count = self.video["items"][0]["statistics"]["viewCount"]
-        self.likes_count = self.video["items"][0]["statistics"]["likeCount"]
+        try:
+            self.video = self.get_service().videos().list(part='snippet,statistics,contentDetails,topicDetails',
+                                                          id=self.id_video).execute()
+            self.title = self.video["items"][0]["snippet"]["title"]
+            self.url_video = f"https://youtu.be/{self.__id_video}"
+            self.view_count = self.video["items"][0]["statistics"]["viewCount"]
+            self.like_count = self.video["items"][0]["statistics"]["likeCount"]
+        except IndexError:
+            self.video = None
+            self.title = None
+            self.url_video = None
+            self.view_count = None
+            self.like_count = None
 
     @property
     def id_video(self):
