@@ -10,12 +10,12 @@ class PlayList:
 
     def __init__(self, id_playlist):
         self.__id_playlist = id_playlist
-        self.url = f"https://www.youtube.com/playlist?list={self.id_playlist}"
-        self.videos_playlist = self.get_service().playlistItems().list(playlistId=self.id_playlist,
+        self.url = f"https://www.youtube.com/playlist?list={self.__id_playlist}"
+        self.videos_playlist = self.get_service().playlistItems().list(playlistId=self.__id_playlist,
                                                                        part="contentDetails,snippet",
                                                                        maxResults=50,).execute()
         self.channel_id = self.videos_playlist["items"][0]["snippet"]["channelId"]
-        self.title = self.get_title(self.channel_id, self.id_playlist, self.get_service())
+        self.title = self.get_title(self.channel_id, self.__id_playlist, self.get_service())
         self.video_ids = [video['contentDetails']['videoId'] for video in self.videos_playlist['items']]
         self.video_response = self.get_service().videos().list(part='contentDetails,statistics',
                                                                id=','.join(self.video_ids)).execute()
